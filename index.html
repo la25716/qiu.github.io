@@ -22,6 +22,65 @@
             overflow-x: hidden;
         }
 
+        /* 轮播图样式 —— 现在是居中、左右留白、不铺满 */
+        .carousel {
+            position: relative;
+            max-width: 900px; /* 控制宽度，不会全屏 */
+            height: 450px;
+            margin: 40px auto; /* 居中 + 上下间距 */
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        .carousel-list {
+            display: flex;
+            height: 100%;
+            transition: transform 0.6s ease;
+        }
+        .carousel-item {
+            min-width: 100%;
+            height: 100%;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .prev, .next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .prev { left: 20px; }
+        .next { right: 20px; }
+        .dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .dot.active {
+            background: white;
+        }
+
         /* 背景渐变光晕效果 */
         .bg-glow {
             position: fixed;
@@ -48,7 +107,7 @@
         /* Hero 核心区域 */
         .hero {
             text-align: center;
-            padding: 100px 20px;
+            padding: 80px 20px;
             max-width: 900px;
             margin: 0 auto;
         }
@@ -64,7 +123,7 @@
         .hero p {
             font-size: 1.25rem;
             color: var(--text-dim);
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
         /* 按钮样式 */
@@ -81,12 +140,12 @@
 
         .btn:hover { transform: translateY(-2px); opacity: 0.9; }
 
-        /* 特色功能网格 (仿 Appy 卡片) */
+        /* 特色功能网格 */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            padding: 80px 10%;
+            padding: 60px 10%;
         }
 
         .feature-card {
@@ -107,6 +166,7 @@
 
         /* 响应式调整 */
         @media (max-width: 768px) {
+            .carousel { height: 280px; margin: 20px; }
             .hero h1 { font-size: 2.2rem; }
             .features { padding: 40px 5%; }
         }
@@ -132,6 +192,31 @@
         </div>
     </section>
 
+    <!-- ========== 轮播图现在在这里！居中、左右留白、不铺满 ========== -->
+    <div class="carousel">
+        <div class="carousel-list">
+            <div class="carousel-item">
+                <img src="images/1.jpg" alt="工厂展示">
+            </div>
+            <div class="carousel-item">
+                <img src="images/2.jpg" alt="生产车间">
+            </div>
+            <div class="carousel-item">
+                <img src="images/3.jpg" alt="鸡胸肉产品">
+           </div>
+            <div class="carousel-item">
+                <img src="images/4.jpg" alt="鸡肉产品">
+            </div>
+        </div>
+        <button class="prev">&lt;</button>
+        <button class="next">&gt;</button>
+        <div class="dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+
     <section class="features" id="service">
         <div class="feature-card">
             <h3>现代化生产线</h3>
@@ -151,6 +236,42 @@
         <p>&copy; 2024 您的工厂名称 版权所有</p >
         <p style="font-size: 0.8rem;">地址：您的详细工厂地址 | 电话：138-XXXX-XXXX</p >
     </footer>
+
+    <script>
+        // 轮播图逻辑
+        const list = document.querySelector('.carousel-list');
+        const items = document.querySelectorAll('.carousel-item');
+        const dots = document.querySelectorAll('.dot');
+        const prev = document.querySelector('.prev');
+        const next = document.querySelector('.next');
+        let index = 0;
+        const len = items.length;
+
+        function update() {
+            list.style.transform = `translateX(-${index * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === index));
+        }
+
+        next.addEventListener('click', () => {
+            index = (index + 1) % len;
+            update();
+        });
+        prev.addEventListener('click', () => {
+            index = (index - 1 + len) % len;
+            update();
+        });
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                index = i;
+                update();
+            });
+        });
+        // 自动播放
+        setInterval(() => {
+            index = (index + 1) % len;
+            update();
+        }, 4000);
+    </script>
 
 </body>
 </html>
